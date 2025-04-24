@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Sidebar } from "./components/Sidebar";
+import { HeaderTabs } from "./components/HeaderTabs";
 import { EquipmentTable } from "./components/EquipmentTable";
 
 const App = () => {
@@ -9,9 +10,12 @@ const App = () => {
       name: "CPP Project",
       details: {
         equipment: [
-          { id: 1, name: "Excavator", description: "Used for digging", quantity: 3 },
-          { id: 2, name: "Bulldozer", description: "Clears land", quantity: 2 },
+          { id: 1, name: "Incubator", description: "Used for Shaking", quantity: 3 },
+          { id: 2, name: "PC", description: "Maintaining Data", quantity: 2 },
         ],
+        survey: [],
+        expenditure: [],
+        researchNotes: [],
       },
     },
   ]);
@@ -28,7 +32,7 @@ const App = () => {
     const newProject = {
       id: Date.now(),
       name: `New Project ${projects.length + 1}`,
-      details: { equipment: [] },
+      details: { equipment: [], survey: [], expenditure: [], researchNotes: [] },
     };
     setProjects([...projects, newProject]);
     setSelectedProjectId(newProject.id);
@@ -107,10 +111,13 @@ const App = () => {
 
       <div className="flex-1 p-6 overflow-y-auto">
         {selectedProject ? (
-          <EquipmentTable
-            data={selectedProject.details.equipment}
-            onChange={handleEquipmentChange}
-          />
+          <>
+            <HeaderTabs selectedProject={selectedProject} onChange={handleEquipmentChange} />
+            <EquipmentTable
+              data={selectedProject.details.equipment}
+              onChange={handleEquipmentChange}
+            />
+          </>
         ) : (
           <div className="text-gray-500 text-center mt-20 text-xl">
             No project selected. Please add or select a project.
