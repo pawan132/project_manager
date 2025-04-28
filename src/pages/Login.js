@@ -7,8 +7,9 @@ const Login = () => {
     username: '',
     email: '',
     password: '',
+    confirmPassword: '',
   });
-
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -18,16 +19,23 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (isSignup && !formData.username) {
-      alert('Username is required for signup');
-      return;
+    if (isSignup) {
+      if (!formData.username) {
+        setErrorMessage('Username is required for signup');
+        return;
+      }
+      if (formData.password !== formData.confirmPassword) {
+        setErrorMessage('Passwords do not match. Please check again.');
+        return;
+      }
     }
 
     if (!formData.email || !formData.password) {
-      alert('Please fill all required fields');
+      setErrorMessage('Please fill all required fields');
       return;
     }
 
+    setErrorMessage(''); // Clear any previous error
     console.log(isSignup ? 'Signup Data:' : 'Login Data:', formData);
     navigate('/dashboard');
   };
@@ -35,7 +43,9 @@ const Login = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-bold text-center mb-6">{isSignup ? 'Sign Up' : 'Login'}</h2>
+        <h2 className="text-2xl font-bold text-center mb-6">
+          {isSignup ? 'IARI Sign Up' : 'IARI Login'}
+        </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           {isSignup && (
             <input
@@ -66,6 +76,20 @@ const Login = () => {
             required
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
+          {isSignup && (
+            <input
+              type="password"
+              name="confirmPassword"
+              placeholder="Confirm Password"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          )}
+          {errorMessage && (
+            <p className="text-red-500 text-center">{errorMessage}</p>
+          )}
           <button
             type="submit"
             className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-200"
@@ -76,6 +100,7 @@ const Login = () => {
         <p className="mt-4 text-center text-gray-600">
           {isSignup ? 'Already have an account?' : "Don't have an account?"}{' '}
           <button
+            type="button"
             onClick={() => setIsSignup(!isSignup)}
             className="text-blue-600 hover:underline"
           >
