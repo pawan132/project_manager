@@ -6,6 +6,7 @@ export const EquipmentTable = ({ data, onChange }) => {
   const [newEquipment, setNewEquipment] = useState({ name: "", description: "", quantity: "" });
   const [editEquipment, setEditEquipment] = useState({});
 
+  console.log(data);
   const handleAdd = () => {
     if (!newEquipment.name.trim()) return;
     const newItem = {
@@ -23,6 +24,7 @@ export const EquipmentTable = ({ data, onChange }) => {
   };
 
   const handleSave = () => {
+  console.log(data);
     const updated = data.map((item) => (item.id === editId ? editEquipment : item));
     onChange(updated);
     setEditId(null);
@@ -46,7 +48,8 @@ export const EquipmentTable = ({ data, onChange }) => {
           </tr>
         </thead>
         <tbody>
-          {data.map((item) =>
+        {Array.isArray(data) &&
+          data.map((item)  =>
             editId === item.id ? (
               <tr key={item.id}>
                 <td className="border px-4 py-2">
