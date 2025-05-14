@@ -1,39 +1,46 @@
 import React from "react";
 import { FaExchangeAlt, FaClipboard, FaDollarSign, FaFileAlt } from "react-icons/fa";
 
+
 export const HeaderTabs = ({ selectedProject, onChange }) => {
+  console.log(selectedProject.selectedTab);
+
   return (
+    <>
     <div className="flex gap-4 mb-6">
       <Tab
         icon={<FaExchangeAlt />}
         label="Equipment"
-        active={selectedProject.selectedTab === "equipment"}
-        onClick={() => onChange("equipment")}
+        active={selectedProject.selectedTab === "equipment" }
+        onClick={() => 
+        onChange("Equipment")}
       />
       <Tab
         icon={<FaClipboard />}
         label="Survey"
-        active={selectedProject.selectedTab === "survey"}
-        onClick={() => onChange("survey")}
+        active={selectedProject.selectedTab === "survey" }
+        onClick={() => onChange("Survey")}
       />
       <Tab
         icon={<FaDollarSign />}
         label="Expenditure"
-        active={selectedProject.selectedTab === "expenditure"}
-        onClick={() => onChange("expenditure")}
+        active={selectedProject.selectedTab === "expenditure" }
+        onClick={() => onChange("Expenditure")}
       />
       <Tab
         icon={<FaFileAlt />}
         label="Research Notes"
-        active={selectedProject.selectedTab === "researchNotes"}
-        onClick={() => onChange("researchNotes")}
+        active={selectedProject.selectedTab === "researchNotes" }
+        onClick={() => onChange("ResearchNotes")}
       />
       <Tab
         label="Actions"
-        active={selectedProject.selectedTab === "actions"}
-        onClick={() => onChange("actions")}
+        active={selectedProject.selectedTab === "actions" }
+        onClick={() => onChange("Actions")}
       />
     </div>
+    
+    </>
   );
 };
 

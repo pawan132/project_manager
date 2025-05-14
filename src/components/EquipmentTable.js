@@ -37,7 +37,7 @@ export const EquipmentTable = ({ data, onChange }) => {
 
   return (
     <div>
-      <h3 className="text-xl font-semibold mb-4">Equipment</h3>
+      <h3 className="text-xl font-semibold mb-4">{data}</h3>
       <table className="w-full table-auto border">
         <thead className="bg-gray-100">
           <tr>

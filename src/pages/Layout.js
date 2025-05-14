@@ -95,7 +95,7 @@ const Layout = () => {
   const selectedProject = projects.find((p) => p.id === selectedProjectId);
 
   return (
-    <div className="flex h-screen relative">
+    <div className="flex h-screen bg-gray-400 relative">
       <Sidebar
         projects={projects}
         selectedProjectId={selectedProjectId}
@@ -109,7 +109,7 @@ const Layout = () => {
         editedProjectName={editedProjectName}
       />
 
-      <div className="flex-1 p-6 overflow-y-auto">
+      <div className="flex-1 ml-8 p-3 overflow-y-auto">
         {selectedProject ? (
           <>
             <HeaderTabs selectedProject={selectedProject} onChange={handleEquipmentChange} />
