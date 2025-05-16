@@ -44,7 +44,7 @@ export const HeaderTabs = ({ selectedProject, onChange }) => {
   );
 };
 
-const Tab = ({ icon, label, active, onClick }) => (
+export const Tab = ({ icon, label, active, onClick }) => (
   <button
     onClick={onClick}
     className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium ${

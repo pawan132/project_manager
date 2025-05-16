@@ -25,6 +25,7 @@ const Layout = () => {
   const [editedProjectName, setEditedProjectName] = useState("");
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [projectIdToDelete, setProjectIdToDelete] = useState(null);
+    const [myString, setMyString] = useState('Equipment');
 
   const handleSelectProject = (id) => setSelectedProjectId(id);
 
@@ -77,6 +78,7 @@ const Layout = () => {
   };
 
   const handleEquipmentChange = (updatedEquipment) => {
+    setMyString(updatedEquipment);
     setProjects((prev) =>
       prev.map((project) =>
         project.id === selectedProjectId
@@ -91,7 +93,7 @@ const Layout = () => {
       )
     );
   };
-
+console.log(myString);
   const selectedProject = projects.find((p) => p.id === selectedProjectId);
 
   return (
@@ -114,7 +116,7 @@ const Layout = () => {
           <>
             <HeaderTabs selectedProject={selectedProject} onChange={handleEquipmentChange} />
             <EquipmentTable
-              data={selectedProject.details.equipment}
+              data={myString}
               onChange={handleEquipmentChange}
             />
           </>
