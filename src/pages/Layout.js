@@ -102,7 +102,7 @@ const Layout = () => {
   };
 
   const handleEquipmentChange = (updatedEquipment) => {
-    setMyString(updatedEquipment);
+   
     setProjects((prev) =>
       prev.map((project) =>
         project.id === selectedProjectId
