@@ -2,6 +2,11 @@ import React, { useState } from "react";
 import { Sidebar } from "../components/Sidebar";
 import { HeaderTabs } from "../components/HeaderTabs";
 import { EquipmentTable } from "../components/EquipmentTable";
+import { SurveyTable } from "../components/SurveyTable";
+import { Expenditure } from "../components/Expenditure";
+import { ResearchNotes } from "../components/ResearchNotes";
+import { Actions } from "../components/Actions";
+import { Documents } from "../components/Documents";
 
 const Layout = () => {
   const [projects, setProjects] = useState([
@@ -13,9 +18,21 @@ const Layout = () => {
           { id: 1, name: "Incubator", description: "Used for Shaking", quantity: 3 },
           { id: 2, name: "PC", description: "Maintaining Data", quantity: 2 },
         ],
-        survey: [],
-        expenditure: [],
-        researchNotes: [],
+        survey: [
+          { id: 1, question: "Project Status", response: "On track", date: "2023-05-01" }
+        ],
+        expenditure: [
+          { id: 1, item: "Lab equipment", amount: 1500, date: "2023-04-15", category: "Equipment" }
+        ],
+        researchNotes: [
+          { id: 1, title: "Initial Findings", content: "Preliminary results look promising", date: "2023-05-10" }
+        ],
+        actions: [
+          { id: 1, task: "Order supplies", assignedTo: "Team A", dueDate: "2023-05-20", status: "Pending" }
+        ],
+        documents: [
+          { id: 1, name: "Project Proposal", type: "PDF", uploadDate: "2023-01-15" }
+        ]
       },
     },
   ]);
@@ -25,7 +42,7 @@ const Layout = () => {
   const [editedProjectName, setEditedProjectName] = useState("");
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [projectIdToDelete, setProjectIdToDelete] = useState(null);
-    const [myString, setMyString] = useState('Equipment');
+  const [selectedTab, setSelectedTab] = useState("equipment");
 
   const handleSelectProject = (id) => setSelectedProjectId(id);
 
@@ -33,7 +50,14 @@ const Layout = () => {
     const newProject = {
       id: Date.now(),
       name: `New Project ${projects.length + 1}`,
-      details: { equipment: [], survey: [], expenditure: [], researchNotes: [] },
+      details: { 
+        equipment: [], 
+        survey: [], 
+        expenditure: [], 
+        researchNotes: [],
+        actions: [],
+        documents: []
+      },
     };
     setProjects([...projects, newProject]);
     setSelectedProjectId(newProject.id);
@@ -93,7 +117,91 @@ const Layout = () => {
       )
     );
   };
-console.log(myString);
+
+  const handleSurveyChange = (updatedSurvey) => {
+    setProjects((prev) =>
+      prev.map((project) =>
+        project.id === selectedProjectId
+          ? {
+              ...project,
+              details: {
+                ...project.details,
+                survey: updatedSurvey,
+              },
+            }
+          : project
+      )
+    );
+  };
+
+  const handleExpenditureChange = (updatedExpenditure) => {
+    setProjects((prev) =>
+      prev.map((project) =>
+        project.id === selectedProjectId
+          ? {
+              ...project,
+              details: {
+                ...project.details,
+                expenditure: updatedExpenditure,
+              },
+            }
+          : project
+      )
+    );
+  };
+
+  const handleResearchNotesChange = (updatedNotes) => {
+    setProjects((prev) =>
+      prev.map((project) =>
+        project.id === selectedProjectId
+          ? {
+              ...project,
+              details: {
+                ...project.details,
+                researchNotes: updatedNotes,
+              },
+            }
+          : project
+      )
+    );
+  };
+
+  const handleActionsChange = (updatedActions) => {
+    setProjects((prev) =>
+      prev.map((project) =>
+        project.id === selectedProjectId
+          ? {
+              ...project,
+              details: {
+                ...project.details,
+                actions: updatedActions,
+              },
+            }
+          : project
+      )
+    );
+  };
+
+  const handleDocumentsChange = (updatedDocuments) => {
+    setProjects((prev) =>
+      prev.map((project) =>
+        project.id === selectedProjectId
+          ? {
+              ...project,
+              details: {
+                ...project.details,
+                documents: updatedDocuments,
+              },
+            }
+          : project
+      )
+    );
+  };
+
+  const handleTabChange = (tab) => {
+    setSelectedTab(tab);
+  };
+
   const selectedProject = projects.find((p) => p.id === selectedProjectId);
 
   return (
@@ -114,11 +222,52 @@ console.log(myString);
       <div className="flex-1 ml-8 p-3 overflow-y-auto">
         {selectedProject ? (
           <>
-            <HeaderTabs selectedProject={selectedProject} onChange={handleEquipmentChange} />
-            <EquipmentTable
-              data={myString}
-              onChange={handleEquipmentChange}
+            <HeaderTabs 
+              selectedTab={selectedTab}
+              onTabChange={handleTabChange}
             />
+            
+            {selectedTab === "equipment" && (
+              <EquipmentTable
+                data={selectedProject.details.equipment}
+                onChange={handleEquipmentChange}
+              />
+            )}
+            
+            {selectedTab === "survey" && (
+              <SurveyTable
+                data={selectedProject.details.survey}
+                onChange={handleSurveyChange}
+              />
+            )}
+            
+            {selectedTab === "expenditure" && (
+              <Expenditure
+                data={selectedProject.details.expenditure}
+                onChange={handleExpenditureChange}
+              />
+            )}
+            
+            {selectedTab === "researchNotes" && (
+              <ResearchNotes
+                data={selectedProject.details.researchNotes}
+                onChange={handleResearchNotesChange}
+              />
+            )}
+            
+            {selectedTab === "actions" && (
+              <Actions
+                data={selectedProject.details.actions}
+                onChange={handleActionsChange}
+              />
+            )}
+            
+            {selectedTab === "documents" && (
+              <Documents
+                data={selectedProject.details.documents}
+                onChange={handleDocumentsChange}
+              />
+            )}
           </>
         ) : (
           <div className="text-gray-500 text-center mt-20 text-xl">
