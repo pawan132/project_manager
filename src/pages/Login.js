@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import API from '../api/axios';
 
 const Login = () => {
   const [isSignup, setIsSignup] = useState(false);
+
+    const [message, setMessage] = useState('');
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -16,29 +19,45 @@ const Login = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-
+  setMessage('');
     if (isSignup) {
       if (!formData.username) {
-        setErrorMessage('Username is required for signup');
+        setMessage('Username is required for signup');
         return;
       }
       if (formData.password !== formData.confirmPassword) {
-        setErrorMessage('Passwords do not match. Please check again.');
+        setMessage('Passwords do not match. Please check again.');
         return;
       }
     }
 
     if (!formData.email || !formData.password) {
-      setErrorMessage('Please fill all required fields');
+      setMessage('Please fill all required fields');
       return;
     }
 
-    setErrorMessage(''); // Clear any previous error
-    console.log(isSignup ? 'Signup Data:' : 'Login Data:', formData);
-    navigate('/dashboard');
-  };
+     const endpoint = isSignup ? '/auth/signup' : '/auth/login';
+     try{
+         
+           const res = await API.post(`${endpoint}`, formData);
+            if (isSignup) {
+        setMessage(res.data.message || 'Signup successful');
+      } else {
+        setMessage('Login successful');
+        localStorage.setItem('token', res.data.token);
+          navigate('/dashboard');
+      }
+         } catch (err) {
+      setMessage(err.response?.data?.message || 'Something went wrong');
+    }
+    // Clear any previous error
+};
+   
+    
+  
+  
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-blue px-4">
@@ -87,8 +106,8 @@ const Login = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           )}
-          {errorMessage && (
-            <p className="text-red-500 text-center">{errorMessage}</p>
+          {message && (
+            <p className="text-red-500 text-center">{message}</p>
           )}
           <button
             type="submit"
@@ -101,7 +120,10 @@ const Login = () => {
           {isSignup ? 'Already have an account?' : "Don't have an account?"}{' '}
           <button
             type="button"
-            onClick={() => setIsSignup(!isSignup)}
+            onClick={() => {
+              setIsSignup(!isSignup)
+              setMessage('');
+            }}
             className="text-blue-600 hover:underline"
           >
             {isSignup ? 'Login' : 'Sign Up'}
