@@ -4,7 +4,7 @@ import API from '../api/axios';
 
 const Login = () => {
   const [isSignup, setIsSignup] = useState(false);
-
+   const [isAdmin, setIsAdmin] = useState(false);
     const [message, setMessage] = useState('');
   const [formData, setFormData] = useState({
     username: '',
@@ -62,8 +62,24 @@ const Login = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-blue px-4">
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
+        {/* Tabs for User / Admin */}
+        <div className="flex justify-around mb-6">
+          <button
+            onClick={() => setIsAdmin(false)}
+            className={`px-4 py-2 rounded-md ${!isAdmin ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'}`}
+          >
+            User
+          </button>
+          <button
+            onClick={() => setIsAdmin(true)}
+            className={`px-4 py-2 rounded-md ${isAdmin ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'}`}
+          >
+            Admin
+          </button>
+        </div>
+
         <h2 className="text-2xl font-bold text-center mb-6">
-          {isSignup ? 'IARI Sign Up' : 'IARI Login'}
+          {isAdmin ? 'Admin' : 'IARI'} {isSignup ? 'Sign Up' : 'Login'}
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           {isSignup && (

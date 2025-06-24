@@ -1,15 +1,11 @@
 const mongoose = require('mongoose');
 
 const researchNoteSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
-  },
+  title: String,
   content: String,
-  date: {
-    type: Date,
-    default: Date.now,
-  },
+  date: Date,
+  project: { type: mongoose.Schema.Types.ObjectId, ref: 'Project' }
 }, { timestamps: true });
 
 module.exports = mongoose.model('ResearchNote', researchNoteSchema);
+
