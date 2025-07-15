@@ -7,4 +7,14 @@ const API = axios.create({
   },
 });
 
+// 🔐 Add token to headers using interceptor
+API.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token'); // get token from localStorage
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 export default API;
+
