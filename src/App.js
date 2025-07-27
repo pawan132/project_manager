@@ -1,22 +1,39 @@
+// App.js
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
-import Layout from './pages/Layout';
+import Layout from './layouts/Layout';
+import Dashboard from './pages/Dashboard';
+import ProjectDetails from './pages/ProjectDetails';
+import PrivateRoute from './routes/PrivateRoute';
 
-function App() {
+const App = () => {
   return (
     <Router>
       <Routes>
-        {/* Root route shows login */}
+        {/* Public Route */}
         <Route path="/" element={<Login />} />
 
-        {/* After login, show the dashboard */}
-        <Route path="/dashboard" element={<Layout />} />
+        {/* Protected Routes */}
+        <Route
+          path="/dashboard"
+          element={
+            <PrivateRoute>
+              <Layout />
+            </PrivateRoute>
+          }
+        >
+          <Route index element={<Dashboard />} />
+          <Route path="project/:id" element={<ProjectDetails />} />
+        </Route>
       </Routes>
     </Router>
   );
-}
+};
 
 export default App;
+
+
+
 
 

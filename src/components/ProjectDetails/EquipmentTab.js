@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { FaPlus, FaTrash, FaPen, FaCheck } from "react-icons/fa";
 
-export const EquipmentTable = ({ data, onChange }) => {
+export const EquipmentTab = ({ data, onChange }) => {
   const [editId, setEditId] = useState(null);
   const [newEquipment, setNewEquipment] = useState({ name: "", description: "", quantity: "" });
   const [editEquipment, setEditEquipment] = useState({});
 
-  console.log(data);
   const handleAdd = () => {
     if (!newEquipment.name.trim()) return;
     const newItem = {
@@ -24,15 +23,14 @@ export const EquipmentTable = ({ data, onChange }) => {
   };
 
   const handleSave = () => {
-  console.log(data);
-    const updated = data.map((item) => (item.id === editId ? editEquipment : item));
+    const updated = data?.map((item) => (item.id === editId ? editEquipment : item));
     onChange(updated);
     setEditId(null);
     setEditEquipment({});
   };
 
   const handleDelete = (id) => {
-    onChange(data.filter((item) => item.id !== id));
+    onChange(data?.filter((item) => item.id !== id));
   };
 
   return (
@@ -48,8 +46,7 @@ export const EquipmentTable = ({ data, onChange }) => {
           </tr>
         </thead>
         <tbody>
-        {Array.isArray(data) &&
-          data.map((item)  =>
+          {data?.map((item) =>
             editId === item.id ? (
               <tr key={item.id}>
                 <td className="border px-4 py-2">
@@ -144,3 +141,4 @@ export const EquipmentTable = ({ data, onChange }) => {
     </div>
   );
 };
+export default EquipmentTab; 

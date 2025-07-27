@@ -1,11 +1,15 @@
 import React, { useEffect,useState,useRef } from "react";
-import { Sidebar } from "../components/Sidebar";
+
 import Header from "../components/Header";
 import AddBanner from "../common/AddBanner";
 import useOnClickOutside from "../hooks/useOnClickOutside";
 import API from '../api/axios';
+import { Outlet } from "react-router-dom";
+import { useNavigate } from 'react-router-dom'; // Add this
 
-const Layout = () => {
+
+
+const Dashboard = () => {
  
 
  
@@ -19,43 +23,36 @@ const Layout = () => {
 
   const handleAdd = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
-
+   const navigate = useNavigate(); // Add this inside your component
   
+  const fetchProjects = async () => {
+    try {
+      const res = await API.get('/projects/get-project');
+      setProjects(res.data);
+    } catch (err) {
+      console.error('Error fetching projects:', err);
+    }
+  };
 
+  // 🟢 Fetch once on component mount
   useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const res = await API.get('/projects/get-project');
-        setProjects(res.data);
-      } catch (err) {
-        console.error('Error fetching projects:', err);
-      }
-    };
-
     fetchProjects();
-  }, []);
+  }, []); // no dependencies = only on mount
 
-
-const handleSaveProject = async () => {
-  if (!projectName.trim()) {
+  // 🟢 When saving new project, call fetchProjects after API call
+  const handleSaveProject = async (projectName) => {
+    if (!projectName.trim()) {
     alert("Project name is required.");
     return;
   }
+    try {
+      await API.post('/projects', { name: projectName });
+      fetchProjects(); // refresh project list after adding
+    } catch (err) {
+      console.error('Error saving project:', err);
+    }
+  };
 
-  try {
-    const res = await API.post('/projects', { name: projectName });
-
-    console.log("Project created:", res.data);
-    // Optionally: setProjects(prev => [...prev, res.data.project]);
-
-  } catch (err) {
-    console.error("Error:", err.response?.data || err.message);
-    alert(err.response?.data?.message || "Something went wrong");
-  }
-
-  setProjectName("");
-  setShowModal(false);
-};
 
 
   const modalRef = useRef(null);
@@ -94,11 +91,11 @@ const handleSaveProject = async () => {
         <table className="min-w-full border rounded-md">
           <thead className="bg-gray-100 text-left">
             <tr>
-              <th className="px-4 py-2 border">Name (Username)</th>
-              <th className="px-4 py-2 border">Project Name</th>
-              <th className="px-4 py-2 border">Email</th>
-              <th className="px-4 py-2 border">Created At</th>
-              <th className="px-4 py-2 border">Actions</th>
+              <th className="px-4 py-2 border">👤Name (Username)</th>
+              <th className="px-4 py-2 border">📝Project Name</th>
+              <th className="px-4 py-2 border">📧Email</th>
+              <th className="px-4 py-2 border">📅Created At</th>
+              <th className="px-4 py-2 border">📄Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -116,9 +113,13 @@ const handleSaveProject = async () => {
                   <td className="px-4 py-2 border">{project.email}</td>
                   <td className="px-4 py-2 border">{new Date(project.date).toLocaleString()}</td>
                   <td className="px-4 py-2 border flex gap-2">
-                    <button className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
-                      Details
-                    </button>
+                    <button
+  onClick={() => navigate(`/dashboard/project/${project.projectId}`)}
+  className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+>
+  Details
+</button>
+
                     <button className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">
                       Edit
                     </button>
@@ -161,8 +162,13 @@ const handleSaveProject = async () => {
           </div>
         )}
         </div>
+         <main>
+            <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+              {<Outlet />}
+            </div>
+          </main>
    </>
 )
 };
 
-export default Layout;
+export default Dashboard;

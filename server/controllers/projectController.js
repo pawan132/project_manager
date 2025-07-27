@@ -41,6 +41,7 @@ const getProject = async (req, res) => {
       .select('name createdAt createdBy');
 
     const formatted = projects.map((proj) => ({
+      projectId: proj._id,
       projectName: proj.name,
       username: proj.createdBy?.username || "N/A",
       email: proj.createdBy?.email || "N/A",
